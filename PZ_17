@@ -1,0 +1,146 @@
+import os
+import shutil
+
+def task_3():
+    print("=== Задание 3 ===")
+    
+    # 1. Переход в каталог PZ11 и вывод списка файлов
+    print("\n1. Файлы в каталоге PZ11:")
+    try:
+        os.chdir("PZ11")
+        files = [f for f in os.listdir() if os.path.isfile(f)]
+        for file in files:
+            print(f"  - {file}")
+    except FileNotFoundError:
+        print("  Каталог PZ11 не найден")
+    
+    # 2. Создание структуры папок и работа с файлами
+    print("\n2. Создание структуры папок:")
+    
+    # Переход в корень проекта
+    os.chdir("..")
+    
+    # Создание папок
+    os.makedirs("test/test1", exist_ok=True)
+    print("  Созданы папки test/test1")
+    
+    # Копирование файлов (пример - нужно заменить на реальные пути)
+    try:
+        # Предположим, что у нас есть файлы в PZ6 и PZ7
+        pz6_files = [f for f in os.listdir("PZ6") if os.path.isfile(os.path.join("PZ6", f))][:2]
+        pz7_files = [f for f in os.listdir("PZ7") if os.path.isfile(os.path.join("PZ7", f))][:1]
+        
+        for file in pz6_files:
+            shutil.copy2(os.path.join("PZ6", file), "test")
+            print(f"  Скопирован {file} в test/")
+        
+        for file in pz7_files:
+            shutil.copy2(os.path.join("PZ7", file), "test/test1/test.txt")
+            print(f"  Скопирован и переименован {file} в test/test1/test.txt")
+        
+        # Вывод информации о размере файлов
+        total_size = 0
+        for file in os.listdir("test"):
+            file_path = os.path.join("test", file)
+            if os.path.isfile(file_path):
+                size = os.path.getsize(file_path)
+                total_size += size
+                print(f"  {file}: {size} байт")
+        
+        print(f"  Общий размер файлов в папке test: {total_size} байт")
+        
+    except FileNotFoundError as e:
+        print(f"  Ошибка: {e}")
+    
+    # 3. Поиск файла с самым коротким именем в PZ11
+    print("\n3. Поиск файла с самым коротким именем в PZ11:")
+    try:
+        os.chdir("PZ11")
+        files = [f for f in os.listdir() if os.path.isfile(f)]
+        if files:
+            shortest_file = min(files, key=lambda x: len(os.path.basename(x)))
+            print(f"  Файл с самым коротким именем: {os.path.basename(shortest_file)}")
+        else:
+            print("  Файлы не найдены")
+    except FileNotFoundError:
+        print("  Каталог PZ11 не найден")
+    
+    # 4. Запуск PDF файла
+    print("\n4. Поиск и запуск PDF файла:")
+    for root, dirs, files in os.walk(".."):
+        for file in files:
+            if file.endswith(".pdf"):
+                pdf_path = os.path.join(root, file)
+                print(f"  Найден PDF: {pdf_path}")
+                try:
+                    os.startfile(pdf_path)
+                    print(f"  Запущен файл: {file}")
+                    break
+                except:
+                    print(f"  Не удалось запустить файл: {file}")
+                break
+        else:
+            continue
+        break
+    else:
+        print("  PDF файлы не найдены")
+    
+    # 5. Удаление файла test.txt
+    print("\n5. Удаление файла test.txt:")
+    try:
+        os.chdir("../test/test1")
+        if os.path.exists("test.txt"):
+            os.remove("test.txt")
+            print("  Файл test.txt удален")
+        else:
+            print("  Файл test.txt не найден")
+    except FileNotFoundError:
+        print("  Файл test.txt не найден")
+
+# Задача из ПЗ №2-9 (пример)
+def pz_task():
+    """
+    Задача из ПЗ: Напишите программу для работы с матрицами
+    """
+    print("\n=== Задача из ПЗ ===")
+    
+    def create_matrix(rows, cols):
+        """Создание матрицы"""
+        matrix = []
+        for i in range(rows):
+            row = []
+            for j in range(cols):
+                row.append(i * cols + j + 1)
+            matrix.append(row)
+        return matrix
+    
+    def print_matrix(matrix):
+        """Вывод матрицы"""
+        for row in matrix:
+            print(' '.join(f'{elem:3}' for elem in row))
+    
+    def transpose_matrix(matrix):
+        """Транспонирование матрицы"""
+        rows = len(matrix)
+        cols = len(matrix[0])
+        transposed = [[0 for _ in range(rows)] for _ in range(cols)]
+        
+        for i in range(rows):
+            for j in range(cols):
+                transposed[j][i] = matrix[i][j]
+        
+        return transposed
+    
+    # Создание и работа с матрицей
+    print("Исходная матрица 3x4:")
+    matrix = create_matrix(3, 4)
+    print_matrix(matrix)
+    
+    print("\nТранспонированная матрица:")
+    transposed = transpose_matrix(matrix)
+    print_matrix(transposed)
+
+if __name__ == "__main__":
+    # Запуск всех заданий
+    task_3()
+    pz_task()
